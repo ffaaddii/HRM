@@ -62,69 +62,69 @@ const FingerprintCalculator = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label htmlFor="flexibleTime" className="text-gray-700 dark:text-gray-300">مدة الوقت المرن (بالدقائق)</Label>
+            <Label htmlFor="flexibleTime" className="text-gray-700 dark:text-gray-300">Flexible Time Duration (in minutes)</Label>
             <Input
               id="flexibleTime"
               type="number"
               value={flexibleTimeMinutes}
               onChange={(e) => setFlexibleTimeMinutes(Number(e.target.value))}
-              placeholder="مثال: 60"
+              placeholder="e.g., 60"
               min="0"
               className="mt-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
             />
             <p className="text-sm text-muted-foreground mt-1">
-              المدة (بالدقائق) التي يمكن للموظف أن يتأخر فيها أو يغادر مبكرًا دون عقوبة.
+              The duration (in minutes) an employee can be late or leave early without penalty.
             </p>
           </div>
 
           <div>
-            <Label htmlFor="entryExitTime" className="text-gray-700 dark:text-gray-300">ساعة الدخول أو الخروج القياسية (HH:MM)</Label>
+            <Label htmlFor="entryExitTime" className="text-gray-700 dark:text-gray-300">Standard Entry or Exit Time (HH:MM)</Label>
             <Input
               id="entryExitTime"
               type="text"
               value={entryExitTime}
               onChange={(e) => setEntryExitTime(e.target.value)}
-              placeholder="مثال: 09:00"
+              placeholder="e.g., 09:00"
               className="mt-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
             />
             <p className="text-sm text-muted-foreground mt-1">
-              الوقت القياسي للدخول أو الخروج (مثال: 09:00 لدخول الصباح).
+              The standard time for entry or exit (e.g., 09:00 for morning entry).
             </p>
           </div>
 
           <div>
-            <Label htmlFor="holidays" className="text-gray-700 dark:text-gray-300">أيام العطل السنوية والأسبوعية (YYYY-MM-DD، مفصولة بفاصلة)</Label>
+            <Label htmlFor="holidays" className="text-gray-700 dark:text-gray-300">Annual and Weekly Holidays (YYYY-MM-DD, comma-separated)</Label>
             <Textarea
               id="holidays"
               value={holidays}
               onChange={(e) => setHolidays(e.target.value)}
-              placeholder="مثال: 2023-12-25, 2024-01-01"
+              placeholder="e.g., 2023-12-25, 2024-01-01"
               rows={4}
               className="mt-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
             />
             <p className="text-sm text-muted-foreground mt-1">
-              قائمة بجميع العطل السنوية والأسبوعية، مفصولة بفاصلات.
+              A list of all annual and weekly holidays, separated by commas.
             </p>
           </div>
 
           <div className="flex gap-4">
             <Button onClick={handleCalculate} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
-              حساب الحضور
+              Calculate Attendance
             </Button>
             <Button onClick={handleClear} variant="outline" className="flex-1 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-              مسح النموذج
+              Clear Form
             </Button>
           </div>
 
           {calculationResult && (
             <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600 whitespace-pre-wrap text-gray-800 dark:text-gray-200">
-              <h3 className="font-semibold text-lg mb-2">نتيجة الحساب (محاكاة):</h3>
+              <h3 className="font-semibold text-lg mb-2">Calculation Result (Simulation):</h3>
               <p>{calculationResult}</p>
             </div>
           )}
 
           <p className="text-sm text-red-500 dark:text-red-400 mt-4">
-            ملاحظة: يتطلب التكامل المباشر مع أجهزة بصمات الأصابع ZKTeco ومعالجة البيانات البيومترية الأولية خدمة خلفية (backend). تسمح لك هذه الواجهة بتكوين المعلمات لنظام افتراضي لحساب الحضور.
+            Note: Direct integration with ZKTeco fingerprint devices and raw biometric data processing requires a backend service. This interface allows you to configure parameters for a hypothetical attendance calculation system.
           </p>
         </CardContent>
       </Card>
