@@ -1,14 +1,35 @@
 "use client";
 
-import React, { ReactNode } from 'react';
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom'; // Import Outlet and useLocation
 import SidebarNav from './SidebarNav';
 import { MadeWithDyad } from './made-with-dyad';
 
-interface LayoutProps {
-  children: ReactNode;
-}
+// Define a mapping for route paths to titles
+const routeTitles: { [key: string]: string } = {
+  '/dashboard': 'Dashboard',
+  '/employees': 'Employees',
+  '/employees/add': 'Add Employee',
+  '/employees/edit': 'Edit Employee', // Base for dynamic ID
+  '/departments': 'Departments',
+  '/departments/add': 'Add Department',
+  '/departments/edit': 'Edit Department', // Base for dynamic ID
+  '/attendance': 'Attendance',
+};
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = () => { // Removed LayoutProps and children prop
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Determine the title based on the current path
+  let pageTitle = 'HRM System'; // Default title
+  for (const path in routeTitles) {
+    if (currentPath.startsWith(path)) {
+      pageTitle = routeTitles[path];
+      break;
+    }
+  }
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-sidebar-background md:block">
@@ -30,11 +51,11 @@ const Layout = ({ children }: LayoutProps) => {
         <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
           {/* Mobile navigation toggle can go here if needed */}
           <h1 className="text-xl font-semibold">
-            {/* Dynamic title based on route */}
+            {pageTitle} {/* Dynamic title based on route */}
           </h1>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-muted/40">
-          {children}
+          <Outlet /> {/* This is where the child routes will render */}
         </main>
       </div>
     </div>
