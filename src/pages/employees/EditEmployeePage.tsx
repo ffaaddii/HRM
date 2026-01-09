@@ -6,39 +6,56 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; // Import Select components
 import { useEmployees } from '@/context/EmployeeContext';
+import { useDepartments } from '@/context/DepartmentContext'; // Import useDepartments
 import { showSuccess, showError } from '@/utils/toast';
 
 const EditEmployeePage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { employees, updateEmployee } = useEmployees();
+  const { departments } = useDepartments(); // Get departments
   const [employee, setEmployee] = useState({
     id: '',
     name: '',
     email: '',
     position: '',
-    department: '',
+    department: '', // This will store the department name
   });
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(''); // State for selected department ID
 
   useEffect(() => {
     const employeeToEdit = employees.find((emp) => emp.id === id);
     if (employeeToEdit) {
       setEmployee(employeeToEdit);
+      // Find the ID of the department based on the employee's department name
+      const currentDepartment = departments.find(d => d.name === employeeToEdit.department);
+      if (currentDepartment) {
+        setSelectedDepartmentId(currentDepartment.id);
+      }
     } else {
       showError("Employee not found.");
       navigate('/employees');
     }
-  }, [id, employees, navigate]);
+  }, [id, employees, navigate, departments]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setEmployee((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleDepartmentChange = (value: string) => {
+    setSelectedDepartmentId(value);
+    const dept = departments.find(d => d.id === value);
+    if (dept) {
+      setEmployee((prev) => ({ ...prev, department: dept.name }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!employee.name || !employee.email || !employee.position || !employee.department) {
+    if (!employee.name || !employee.email || !employee.position || !employee.department) { // Validate department
       showError("Please fill in all fields.");
       return;
     }
@@ -70,7 +87,18 @@ const EditEmployeePage = () => {
             </div>
             <div>
               <Label htmlFor="department">Department</Label>
-              <Input id="department" value={employee.department} onChange={handleChange} required />
+              <Select onValueChange={handleDepartmentChange} value={selectedDepartmentId} required>
+                <SelectTrigger id="department">
+                  <SelectValue placeholder="Select a department" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departments.map((dept) => (
+                    <SelectItem key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => navigate('/employees')}>Cancel</Button>

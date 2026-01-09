@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Users, UserPlus, CalendarDays, DollarSign } from 'lucide-react';
+import { LayoutDashboard, Users, UserPlus, CalendarDays, DollarSign, Building2 } from 'lucide-react'; // Added Building2 icon
 
 interface NavLink {
   href: string;
@@ -15,7 +15,8 @@ const navLinks: NavLink[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/employees', label: 'Employees', icon: Users },
   { href: '/employees/add', label: 'Add Employee', icon: UserPlus },
-  { href: '/attendance', label: 'Attendance', icon: CalendarDays }, // Enabled feature
+  { href: '/departments', label: 'Departments', icon: Building2 }, // New Department link
+  { href: '/attendance', label: 'Attendance', icon: CalendarDays },
   // { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
 ];
 
