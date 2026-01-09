@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Users, UserPlus, CalendarDays, DollarSign, Building2 } from 'lucide-react'; // Added Building2 icon
+import { LayoutDashboard, Users, UserPlus, CalendarDays, DollarSign, Building2 } from 'lucide-react';
 
 interface NavLink {
   href: string;
@@ -11,16 +11,20 @@ interface NavLink {
   icon: React.ElementType;
 }
 
+interface SidebarNavProps {
+  onLinkClick?: () => void; // New prop for handling link clicks
+}
+
 const navLinks: NavLink[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/employees', label: 'Employees', icon: Users },
   { href: '/employees/add', label: 'Add Employee', icon: UserPlus },
-  { href: '/departments', label: 'Departments', icon: Building2 }, // New Department link
+  { href: '/departments', label: 'Departments', icon: Building2 },
   { href: '/attendance', label: 'Attendance', icon: CalendarDays },
   // { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
 ];
 
-const SidebarNav = () => {
+const SidebarNav = ({ onLinkClick }: SidebarNavProps) => {
   const location = useLocation();
 
   return (
@@ -29,6 +33,7 @@ const SidebarNav = () => {
         <Link
           key={link.href}
           to={link.href}
+          onClick={onLinkClick} // Call onLinkClick when a link is clicked
           className={cn(
             'flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:text-sidebar-primary',
             location.pathname === link.href && 'bg-sidebar-accent text-sidebar-primary'
