@@ -7,12 +7,49 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { showSuccess, showError } from "@/utils/toast";
+import * as XLSX from "xlsx"; // Import the xlsx library
+
+interface FingerprintRecord {
+  [key: string]: any; // Flexible interface for Excel data
+}
 
 const FingerprintCalculator = () => {
-  const [flexibleTimeMinutes, setFlexibleTimeMinutes] = useState<number>(60); // Default 60 minutes
-  const [entryExitTime, setEntryExitTime] = useState<string>("09:00"); // Default entry time
-  const [holidays, setHolidays] = useState<string>(""); // Comma-separated dates
+  const [flexibleTimeMinutes, setFlexibleTimeMinutes] = useState<number>(60);
+  const [entryExitTime, setEntryExitTime] = useState<string>("09:00");
+  const [holidays, setHolidays] = useState<string>("");
   const [calculationResult, setCalculationResult] = useState<string | null>(null);
+  const [excelData, setExcelData] = useState<FingerprintRecord[] | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = e.target?.result;
+        if (data) {
+          try {
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json<FingerprintRecord>(worksheet);
+            setExcelData(json);
+            showSuccess(`Excel file "${file.name}" loaded successfully.`);
+          } catch (error) {
+            showError("Error reading Excel file. Please ensure it's a valid .xlsx file.");
+            console.error("Excel read error:", error);
+            setExcelData(null);
+            setFileName(null);
+          }
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      setExcelData(null);
+      setFileName(null);
+    }
+  };
 
   const handleCalculate = () => {
     // Basic validation
@@ -37,7 +74,63 @@ const FingerprintCalculator = () => {
       - Standard Entry/Exit: ${entryExitTime}
       - Holidays: ${holidayList.length > 0 ? holidayList.join(", ") : "None"}`;
 
-    resultMessage += "\n\nNote: Actual ZKTeco fingerprint data processing requires a backend service. This is a client-side simulation.";
+    if (excelData && excelData.length > 0) {
+      resultMessage += `\n\nProcessing data from Excel file: "${fileName}"`;
+      resultMessage += `\nTotal records: ${excelData.length}`;
+      resultMessage += `\n\n--- Simulated Attendance Report ---`;
+
+      // --- Placeholder for actual attendance calculation logic ---
+      // You will need to adapt this based on your Excel file's column names
+      // For example, if your Excel has columns like 'EmployeeID', 'Timestamp':
+      const attendanceSummary: { [employeeId: string]: { [date: string]: string[] } } = {};
+
+      excelData.forEach((record) => {
+        // Assuming 'EmployeeID' and 'Timestamp' are column names in your Excel
+        const employeeId = record["EmployeeID"] || record["Employee ID"] || "Unknown Employee";
+        const timestampStr = record["Timestamp"] || record["Time"] || record["Date/Time"]; // Adjust column name as per your Excel
+
+        if (employeeId && timestampStr) {
+          const timestamp = new Date(timestampStr); // Attempt to parse timestamp
+          if (!isNaN(timestamp.getTime())) {
+            const dateKey = timestamp.toISOString().split('T')[0]; // YYYY-MM-DD
+            if (!attendanceSummary[employeeId]) {
+              attendanceSummary[employeeId] = {};
+            }
+            if (!attendanceSummary[employeeId][dateKey]) {
+              attendanceSummary[employeeId][dateKey] = [];
+            }
+            attendanceSummary[employeeId][dateKey].push(timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }));
+          }
+        }
+      });
+
+      for (const empId in attendanceSummary) {
+        resultMessage += `\n\nEmployee: ${empId}`;
+        for (const date in attendanceSummary[empId]) {
+          const punches = attendanceSummary[empId][date].sort();
+          const firstPunch = punches[0];
+          const lastPunch = punches[punches.length - 1];
+
+          // Simple simulation: check if first punch is after standard entry time + flexible time
+          const [stdHour, stdMinute] = entryExitTime.split(':').map(Number);
+          const stdEntryDate = new Date(`${date}T${entryExitTime}:00`);
+          const flexibleEntryLimit = new Date(stdEntryDate.getTime() + flexibleTimeMinutes * 60 * 1000);
+
+          let status = "Present";
+          if (new Date(`${date}T${firstPunch}:00`) > flexibleEntryLimit) {
+            status = "Late";
+          }
+          // More complex logic for early exit, missing punches, etc., would go here.
+
+          resultMessage += `\n  Date: ${date}, Punches: ${punches.join(', ')}, Status: ${status}`;
+        }
+      }
+      // --- End of placeholder logic ---
+
+      resultMessage += "\n\nNote: The attendance calculation above is a simplified simulation. You need to implement the precise logic based on your ZKTeco data format and company policies (e.g., specific columns for employee ID, timestamp, shift rules, etc.).";
+    } else {
+      resultMessage += "\n\nNo Excel data loaded. Calculation based on manual parameters only.";
+    }
 
     setCalculationResult(resultMessage);
     showSuccess("Calculation parameters received. Result displayed below.");
@@ -48,6 +141,8 @@ const FingerprintCalculator = () => {
     setEntryExitTime("09:00");
     setHolidays("");
     setCalculationResult(null);
+    setExcelData(null);
+    setFileName(null);
     showSuccess("Form cleared.");
   };
 
@@ -57,7 +152,7 @@ const FingerprintCalculator = () => {
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Fingerprint Attendance Calculator</CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400">
-            Configure parameters for attendance calculation based on ZKTeco data.
+            Configure parameters and upload ZKTeco fingerprint data for attendance calculation.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -107,6 +202,25 @@ const FingerprintCalculator = () => {
             </p>
           </div>
 
+          <div>
+            <Label htmlFor="excelFile" className="text-gray-700 dark:text-gray-300">Upload ZKTeco Fingerprint Data (Excel .xlsx)</Label>
+            <Input
+              id="excelFile"
+              type="file"
+              accept=".xlsx"
+              onChange={handleFileUpload}
+              className="mt-1 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 file:text-gray-900 dark:file:text-gray-100 file:bg-gray-200 dark:file:bg-gray-600 file:border-0 file:mr-4 file:py-2 file:px-4 file:rounded-md"
+            />
+            {fileName && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Loaded file: <span className="font-medium">{fileName}</span> ({excelData?.length || 0} records)
+              </p>
+            )}
+            <p className="text-sm text-muted-foreground mt-1">
+              Upload an Excel file containing employee fingerprint records (e.g., EmployeeID, Timestamp columns).
+            </p>
+          </div>
+
           <div className="flex gap-4">
             <Button onClick={handleCalculate} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
               Calculate Attendance
@@ -124,7 +238,7 @@ const FingerprintCalculator = () => {
           )}
 
           <p className="text-sm text-red-500 dark:text-red-400 mt-4">
-            Note: Direct integration with ZKTeco fingerprint devices and raw biometric data processing requires a backend service. This interface allows you to configure parameters for a hypothetical attendance calculation system.
+            Note: Direct integration with ZKTeco fingerprint devices and raw biometric data processing requires a backend service. This interface allows you to configure parameters and simulate attendance calculation based on uploaded Excel data. You will need to adjust the attendance calculation logic within the code to match the exact column names and rules from your ZKTeco Excel export.
           </p>
         </CardContent>
       </Card>
