@@ -9,13 +9,13 @@ import Dashboard from "./pages/Dashboard";
 import EmployeeListPage from "./pages/employees/EmployeeListPage";
 import AddEmployeePage from "./pages/employees/AddEmployeePage";
 import EditEmployeePage from "./pages/employees/EditEmployeePage";
-import AttendancePage from "./pages/AttendancePage";
+import AttendancePage from "./pages/AttendancePage"; // Import AttendancePage
 import DepartmentListPage from "./pages/departments/DepartmentListPage";
 import AddDepartmentPage from "./pages/departments/AddDepartmentPage";
 import EditDepartmentPage from "./pages/departments/EditDepartmentPage";
 import { EmployeeProvider } from "./context/EmployeeContext";
 import { DepartmentProvider } from "./context/DepartmentContext";
-import { ThemeProvider } from "@/components/theme-provider"; // Import ThemeProvider
+import { ThemeProvider } from "@/components/theme-provider";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +25,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <DepartmentProvider>
             <EmployeeProvider>
               <Routes>
@@ -38,7 +38,7 @@ const App = () => (
                   <Route path="departments" element={<DepartmentListPage />} />
                   <Route path="departments/add" element={<AddDepartmentPage />} />
                   <Route path="departments/edit/:id" element={<EditDepartmentPage />} />
-                  <Route path="attendance" element={<AttendancePage />} />
+                  <Route path="attendance" element={<AttendancePage />} /> {/* New route for AttendancePage */}
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 </Route>
                 <Route path="*" element={<NotFound />} />

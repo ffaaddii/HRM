@@ -20,7 +20,7 @@ const navLinks: NavLink[] = [
   { href: '/employees', label: 'Employees', icon: Users },
   { href: '/employees/add', label: 'Add Employee', icon: UserPlus },
   { href: '/departments', label: 'Departments', icon: Building2 },
-  { href: '/attendance', label: 'Attendance', icon: CalendarDays },
+  { href: '/attendance', label: 'Attendance', icon: CalendarDays }, // Added Attendance link
   // { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
 ];
 
