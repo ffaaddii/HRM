@@ -10,11 +10,12 @@ import EmployeeListPage from "./pages/employees/EmployeeListPage";
 import AddEmployeePage from "./pages/employees/AddEmployeePage";
 import EditEmployeePage from "./pages/employees/EditEmployeePage";
 import AttendancePage from "./pages/AttendancePage";
-import DepartmentListPage from "./pages/departments/DepartmentListPage"; // Import new department pages
+import DepartmentListPage from "./pages/departments/DepartmentListPage";
 import AddDepartmentPage from "./pages/departments/AddDepartmentPage";
 import EditDepartmentPage from "./pages/departments/EditDepartmentPage";
 import { EmployeeProvider } from "./context/EmployeeContext";
-import { DepartmentProvider } from "./context/DepartmentContext"; // Import DepartmentProvider
+import { DepartmentProvider } from "./context/DepartmentContext";
+import { ThemeProvider } from "@/components/theme-provider"; // Import ThemeProvider
 
 const queryClient = new QueryClient();
 
@@ -24,25 +25,27 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <DepartmentProvider> {/* Wrap EmployeeProvider with DepartmentProvider */}
-          <EmployeeProvider>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="employees" element={<EmployeeListPage />} />
-                <Route path="employees/add" element={<AddEmployeePage />} />
-                <Route path="employees/edit/:id" element={<EditEmployeePage />} />
-                <Route path="departments" element={<DepartmentListPage />} /> {/* New Department routes */}
-                <Route path="departments/add" element={<AddDepartmentPage />} />
-                <Route path="departments/edit/:id" element={<EditDepartmentPage />} />
-                <Route path="attendance" element={<AttendancePage />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </EmployeeProvider>
-        </DepartmentProvider>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+          <DepartmentProvider>
+            <EmployeeProvider>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="employees" element={<EmployeeListPage />} />
+                  <Route path="employees/add" element={<AddEmployeePage />} />
+                  <Route path="employees/edit/:id" element={<EditEmployeePage />} />
+                  <Route path="departments" element={<DepartmentListPage />} />
+                  <Route path="departments/add" element={<AddDepartmentPage />} />
+                  <Route path="departments/edit/:id" element={<EditDepartmentPage />} />
+                  <Route path="attendance" element={<AttendancePage />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </EmployeeProvider>
+          </DepartmentProvider>
+        </ThemeProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
