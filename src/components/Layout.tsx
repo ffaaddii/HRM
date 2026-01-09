@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom'; // Import Outlet and useLocation
+import { Outlet, useLocation } from 'react-router-dom';
 import SidebarNav from './SidebarNav';
 import { MadeWithDyad } from './made-with-dyad';
 
@@ -17,7 +17,7 @@ const routeTitles: { [key: string]: string } = {
   '/attendance': 'Attendance',
 };
 
-const Layout = () => { // Removed LayoutProps and children prop
+const Layout = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -48,14 +48,14 @@ const Layout = () => { // Removed LayoutProps and children prop
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6 shadow-sm"> {/* Added shadow-sm */}
           {/* Mobile navigation toggle can go here if needed */}
           <h1 className="text-xl font-semibold">
-            {pageTitle} {/* Dynamic title based on route */}
+            {pageTitle}
           </h1>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-muted/40">
-          <Outlet /> {/* This is where the child routes will render */}
+          <Outlet />
         </main>
       </div>
     </div>
