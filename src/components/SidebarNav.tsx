@@ -21,7 +21,7 @@ const navLinks: NavLink[] = [
   { href: '/employees/add', label: 'Add Employee', icon: UserPlus },
   { href: '/departments', label: 'Departments', icon: Building2 },
   { href: '/attendance', label: 'Attendance', icon: CalendarDays },
-  // { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
+  { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
 ];
 
 const SidebarNav = ({ onLinkClick }: SidebarNavProps) => {
