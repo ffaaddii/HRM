@@ -5,7 +5,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useEmployees } from '@/context/EmployeeContext';
 import { useDepartments } from '@/context/DepartmentContext';
 import { Users, Building2, Gift, UserPlus } from 'lucide-react';
-import DepartmentEmployeeChart from '@/components/DepartmentEmployeeChart'; // Import the new chart component
+import DepartmentEmployeeChart from '@/components/DepartmentEmployeeChart';
+import RecentActivities from '@/components/RecentActivities'; // Import the new RecentActivities component
 
 const Dashboard = () => {
   const { employees } = useEmployees();
@@ -97,10 +98,7 @@ const Dashboard = () => {
             <CardTitle>Recent Activities</CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Placeholder for recent activities */}
-            <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-              No recent activities.
-            </div>
+            <RecentActivities /> {/* Integrate RecentActivities component */}
           </CardContent>
         </Card>
       </div>
