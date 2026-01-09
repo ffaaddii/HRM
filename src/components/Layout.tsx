@@ -18,7 +18,6 @@ const routeTitles: { [key: string]: string } = {
   '/departments/add': 'Add Department',
   '/departments/edit': 'Edit Department', // Base for dynamic ID
   '/attendance': 'Attendance',
-  '/payroll': 'Payroll', // Add Payroll page title
 };
 
 const Layout = () => {
