@@ -15,7 +15,7 @@ const navLinks: NavLink[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/employees', label: 'Employees', icon: Users },
   { href: '/employees/add', label: 'Add Employee', icon: UserPlus },
-  // { href: '/attendance', label: 'Attendance', icon: CalendarDays }, // Future feature
+  { href: '/attendance', label: 'Attendance', icon: CalendarDays }, // Enabled feature
   // { href: '/payroll', label: 'Payroll', icon: DollarSign }, // Future feature
 ];
 

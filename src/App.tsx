@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import EmployeeListPage from "./pages/employees/EmployeeListPage";
 import AddEmployeePage from "./pages/employees/AddEmployeePage";
 import EditEmployeePage from "./pages/employees/EditEmployeePage";
+import AttendancePage from "./pages/AttendancePage"; // Import the new AttendancePage
 import { EmployeeProvider } from "./context/EmployeeContext";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
               <Route path="employees" element={<EmployeeListPage />} />
               <Route path="employees/add" element={<AddEmployeePage />} />
               <Route path="employees/edit/:id" element={<EditEmployeePage />} />
+              <Route path="attendance" element={<AttendancePage />} /> {/* New Attendance route */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             </Route>
             <Route path="*" element={<NotFound />} />
