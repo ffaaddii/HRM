@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useDepartments } from '@/context/DepartmentContext';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Building2 } from 'lucide-react'; // Added Building2 icon
 import { showError, showSuccess } from '@/utils/toast';
 
 const DepartmentListPage = () => {
@@ -36,7 +36,11 @@ const DepartmentListPage = () => {
         </CardHeader>
         <CardContent>
           {departments.length === 0 ? (
-            <p className="text-center text-muted-foreground">No departments found. Add a new department to get started!</p>
+            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+              <Building2 className="h-12 w-12 mb-4" />
+              <p className="text-lg font-medium mb-2">No departments found.</p>
+              <p className="text-sm">Add a new department to get started!</p>
+            </div>
           ) : (
             <Table>
               <TableHeader>

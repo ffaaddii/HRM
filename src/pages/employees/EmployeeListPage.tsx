@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEmployees } from '@/context/EmployeeContext';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Users } from 'lucide-react'; // Added Users icon
 import { showError, showSuccess } from '@/utils/toast';
 
 const EmployeeListPage = () => {
@@ -36,7 +36,11 @@ const EmployeeListPage = () => {
         </CardHeader>
         <CardContent>
           {employees.length === 0 ? (
-            <p className="text-center text-muted-foreground">No employees found. Add a new employee to get started!</p>
+            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+              <Users className="h-12 w-12 mb-4" />
+              <p className="text-lg font-medium mb-2">No employees found.</p>
+              <p className="text-sm">Add a new employee to get started!</p>
+            </div>
           ) : (
             <Table>
               <TableHeader>
