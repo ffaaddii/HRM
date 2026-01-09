@@ -3,12 +3,22 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useEmployees } from '@/context/EmployeeContext';
-import { useDepartments } from '@/context/DepartmentContext'; // Import useDepartments
-import { Users, Building2, Gift, UserPlus } from 'lucide-react'; // Import additional icons
+import { useDepartments } from '@/context/DepartmentContext';
+import { Users, Building2, Gift, UserPlus } from 'lucide-react';
+import DepartmentEmployeeChart from '@/components/DepartmentEmployeeChart'; // Import the new chart component
 
 const Dashboard = () => {
   const { employees } = useEmployees();
-  const { departments } = useDepartments(); // Get departments
+  const { departments } = useDepartments();
+
+  // Calculate employee distribution by department
+  const employeeDistribution = departments.map(dept => {
+    const employeesInDept = employees.filter(emp => emp.department === dept.name).length;
+    return {
+      name: dept.name,
+      employees: employeesInDept,
+    };
+  });
 
   // Placeholder for future logic
   const upcomingBirthdaysCount = 3;
@@ -67,17 +77,19 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
-      {/* You can add more sections here, e.g., charts, recent activities */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle>Employee Distribution by Department</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            {/* Placeholder for a chart or more detailed overview */}
-            <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-              More dashboard content coming soon!
-            </div>
+            {employeeDistribution.length > 0 ? (
+              <DepartmentEmployeeChart data={employeeDistribution} />
+            ) : (
+              <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+                No department data to display.
+              </div>
+            )}
           </CardContent>
         </Card>
         <Card className="col-span-3">
